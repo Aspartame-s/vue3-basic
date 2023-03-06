@@ -4,21 +4,18 @@
     <img alt="Vue logo" src="./assets/logo.png" />
     <h1>{{ count }}</h1>
     <h1>{{ double }}</h1>
+    <h1>X: {{x}}, Y: {{y}}</h1>
+    <h1 v-if="Loading">Loading!</h1>
+    <h1 v-if="Loaded">Loaded</h1>
+    <img :src="result.message" alt="">
     <button @click="add">👍+1</button>
   </div>
 </template>
 
 <script lang="ts">
-// import { defineComponent } from 'vue';
-// import HelloWorld from './components/HelloWorld.vue';
-
-// export default defineComponent({
-//   name: 'App',
-//   components: {
-//     HelloWorld
-//   }
-// });
-import { ref, computed, reactive, toRefs } from "vue";
+import { ref, computed, reactive, toRefs, onMounted, onUnmounted } from "vue";
+import useMousePosition from './hooks/useMousePosition'
+import useURLLoader from './hooks/useURLLoader'
 interface typeData {
   count: number
   add: () => void
@@ -47,9 +44,17 @@ export default {
           return data.count * 2
         })
     })
+    const {x, y} = useMousePosition()
+    const { result, Loading, Loaded, error} = useURLLoader('https://dog.ceo/api/breeds/image/random')
     const refData = toRefs(data)
     return {
-      ...refData
+      ...refData,
+      x,
+      y,
+      result,
+      Loading,
+      Loaded,
+      error
     }
   },
 };
