@@ -6,12 +6,14 @@
     <h1>{{ double }}</h1>
     <h1>X: {{ x }}, Y: {{ y }}</h1>
     <h1 v-if="Loading">Loading!</h1>
+    <modal/>
     <img v-if="Loaded" :src="result[0].url" alt="" />
     <button @click="add">👍+1</button>
   </div>
 </template>
 
 <script lang="ts">
+import Modal from './components/Modal.vue'
 import {
   ref,
   computed,
@@ -38,6 +40,9 @@ interface catResult {
   height: string;
 }
 export default {
+  components: {
+    Modal
+  },
   setup() {
     // const count = ref(0);
     // const add = () => {
