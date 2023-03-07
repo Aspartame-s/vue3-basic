@@ -6,7 +6,8 @@
     <h1>{{ double }}</h1>
     <h1>X: {{ x }}, Y: {{ y }}</h1>
     <h1 v-if="Loading">Loading!</h1>
-    <modal/>
+    <modal :isOpen="isModalOpen" @close-modal="closeModal"> </modal>
+    <button @click="openModal">open</button>
     <img v-if="Loaded" :src="result[0].url" alt="" />
     <button @click="add">👍+1</button>
   </div>
@@ -70,6 +71,13 @@ export default {
     // const { result, Loading, Loaded } = useURLLoader<dogResult>(
     //   "https://dog.ceo/api/breeds/image/random"
     // );
+    const isModalOpen = ref(false)
+    const closeModal = () => {
+      isModalOpen.value = false
+    }
+    const openModal = () => {
+      isModalOpen.value = true
+    }
     watch(result, () => {
       if (result.value) {
         console.log(result.value[0]);
@@ -83,6 +91,9 @@ export default {
       result,
       Loading,
       Loaded,
+      isModalOpen,
+      closeModal,
+      openModal
     };
   },
 };
