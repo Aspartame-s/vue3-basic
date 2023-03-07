@@ -17,6 +17,7 @@ function useURLLoader<T>(url: string) {
         Loading.value = false
     }).catch(e => {
         error.value = e
+        Loading.value = false
     })
     return {
         result,

@@ -6,6 +6,14 @@
     <h1>{{ double }}</h1>
     <h1>X: {{ x }}, Y: {{ y }}</h1>
     <h1 v-if="Loading">Loading!</h1>
+    <Suspense>
+      <template #default>
+        <async-show></async-show>
+      </template>
+      <template #fallback>
+        Loading
+      </template>
+    </Suspense>
     <modal :isOpen="isModalOpen" @close-modal="closeModal"> </modal>
     <button @click="openModal">open</button>
     <img v-if="Loaded" :src="result[0].url" alt="" />
@@ -26,6 +34,7 @@ import {
 } from "vue";
 import useMousePosition from "./hooks/useMousePosition";
 import useURLLoader from "./hooks/useURLLoader";
+import AsyncShow from './components/AsyncShow.vue'
 interface typeData {
   count: number;
   add: () => void;
@@ -42,7 +51,8 @@ interface catResult {
 }
 export default {
   components: {
-    Modal
+    Modal,
+    AsyncShow
   },
   setup() {
     // const count = ref(0);
