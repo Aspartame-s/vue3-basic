@@ -10,9 +10,7 @@
       <template #default>
         <async-show></async-show>
       </template>
-      <template #fallback>
-        Loading
-      </template>
+      <template #fallback> Loading </template>
     </Suspense>
     <modal :isOpen="isModalOpen" @close-modal="closeModal"> </modal>
     <button @click="openModal">open</button>
@@ -22,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import Modal from './components/Modal.vue'
+import Modal from "./components/Modal.vue";
 import {
   ref,
   computed,
@@ -32,13 +30,18 @@ import {
   onUnmounted,
   watch,
 } from "vue";
+//ref 和 reactive 都是生成响应式对象的方法
 import useMousePosition from "./hooks/useMousePosition";
 import useURLLoader from "./hooks/useURLLoader";
-import AsyncShow from './components/AsyncShow.vue'
+import AsyncShow from "./components/AsyncShow.vue";
 interface typeData {
   count: number;
   add: () => void;
   double: number;
+   numbers: number[];
+  person: {
+    name?: string
+  };
 }
 interface dogResult {
   message: string;
@@ -52,7 +55,7 @@ interface catResult {
 export default {
   components: {
     Modal,
-    AsyncShow
+    AsyncShow,
   },
   setup() {
     // const count = ref(0);
@@ -75,19 +78,34 @@ export default {
       double: computed(() => {
         return data.count * 2;
       }),
+      numbers: [0, 1, 2],
+      person: {},
     });
+    const greetings = ref("");
+    const editTitle = () => {
+      greetings.value += "Hello!";
+    };
     const { x, y } = useMousePosition();
-    const {result, Loading, Loaded } = useURLLoader<catResult[]>('https://api.thecatapi.com/v1/images/search')
-    // const { result, Loading, Loaded } = useURLLoader<dogResult>(
-    //   "https://dog.ceo/api/breeds/image/random"
-    // );
-    const isModalOpen = ref(false)
+    const { result, Loading, Loaded } = useURLLoader<catResult[]>(
+      "https://api.thecatapi.com/v1/images/search"
+    );
+    watch([greetings, () => data.count], (newValue, oldValue) => {
+      console.log(newValue);
+      console.log(oldValue);
+      document.title = greetings.value + data.count;
+    }); //wacth 第一个参数就是监听的值，可以是多个参数 写成数组形式
+    // 第二个参数是一个回调函数，当监听的值发生变化时，可以进行逻辑操作
+    // 该回调函数接受两个参数一个是 newValue 另一个是 oldValue
+    //如果要监听对象中的某一个值要写成函数形式 () => data.count
+    data.numbers[0] = 10; // 在vue2中 对响应式的数组无法做到修改某一项的值，但vue3可以轻松做到
+    data.person.name = "cjh"; //在vue2中如果要修改对象的某个属性需要用到 $set 方法，但vue3中可以直接修改或添加
+    const isModalOpen = ref(false);
     const closeModal = () => {
-      isModalOpen.value = false
-    }
+      isModalOpen.value = false;
+    };
     const openModal = () => {
-      isModalOpen.value = true
-    }
+      isModalOpen.value = true;
+    };
     watch(result, () => {
       if (result.value) {
         console.log(result.value[0]);
@@ -103,7 +121,7 @@ export default {
       Loaded,
       isModalOpen,
       closeModal,
-      openModal
+      openModal,
     };
   },
 };
