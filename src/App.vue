@@ -7,8 +7,15 @@
     <h1>X: {{ x }}, Y: {{ y }}</h1>
     <h1 v-if="Loading">Loading!</h1>
     <Suspense>
+      <!-- suspense 包裹后 可以在 default模版中放入多个异步组件
+      在异步请求结束之前的loading状态放入 fallback 模版
+      在default 模版中 会等所有的异步组件返回结果才会显示内容
+      否则一直会显示 fallback 中的内容 -->
       <template #default>
-        <async-show></async-show>
+        <div>
+          <async-show></async-show>
+          <dog-show></dog-show>
+        </div>
       </template>
       <template #fallback> Loading </template>
     </Suspense>
@@ -21,6 +28,7 @@
 
 <script lang="ts">
 import Modal from "./components/Modal.vue";
+import DogShow from "./components/DogShow.vue";
 import {
   ref,
   computed,
@@ -38,9 +46,9 @@ interface typeData {
   count: number;
   add: () => void;
   double: number;
-   numbers: number[];
+  numbers: number[];
   person: {
-    name?: string
+    name?: string;
   };
 }
 interface dogResult {
@@ -56,6 +64,7 @@ export default {
   components: {
     Modal,
     AsyncShow,
+    DogShow,
   },
   setup() {
     // const count = ref(0);
